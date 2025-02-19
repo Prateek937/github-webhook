@@ -20,7 +20,7 @@ const getUserInput = (question) => {
     });
 };
 
-// Parse JSON bodies
+// Parse JSON bodiesss
 app.use(bodyParser.json());
 
 // Webhook endpoint
