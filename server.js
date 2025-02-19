@@ -36,9 +36,20 @@ app.post('/webhook', async (req, res) => {
 
         // Pull the latest changes from specified remote and branch
         console.log(`Pulling latest changes from ${remote}/${branch}...`);
-        await git.pull(remote, branch);
-        console.log(`Successfully pulled latest changes from ${remote}/${branch}`);
-    
+        try {
+            await git.pull(remote, branch);
+            console.log(`Successfully pulled latest changes from ${remote}/${branch}`);
+        } catch (pullError) {
+            if (pullError.message.includes('Could not read from remote repository')) {
+                console.error('Error: Could not read from remote repository. Please check:');
+                console.error('1. The remote repository URL is correct');
+                console.error('2. You have the necessary permissions');
+                console.error('3. The repository exists');
+                console.error('4. Your SSH keys are properly configured (if using SSH)');
+            } else {
+                throw pullError;
+            }
+        }
     } catch (error) {
         console.error('Error pulling changes:', error);
     }
